@@ -2,69 +2,29 @@
 
 ## Project Overview
 
-This is an academic data engineering project developed for a Master's program in Business Intelligence and Data Analytics.  
-The project uses **real open product data from the Open Food Facts API** and demonstrates a complete ETL workflow:
-
-1. Ingest product data from a public API
-2. Clean and transform raw JSON data into structured tables
-3. Apply data quality checks
-4. Load processed data into a SQL database
-5. Generate reporting-ready CSV outputs for Power BI / Excel
-6. Document the pipeline for reproducible analysis
-
-
-## API Endpoint Fix
-
-This project uses the current Open Food Facts API v2 search endpoint:
-
-```text
-https://world.openfoodfacts.org/api/v2/search
-```
-
-The older endpoint:
-
-```text
-https://world.openfoodfacts.org/cgi/search.pl
-```
-
-can return `503 Service Temporarily Unavailable`, so this project avoids the legacy endpoint.
+This project demonstrates an end-to-end ETL pipeline using real open product data from the **Open Food Facts API**. The pipeline collects product catalog data, transforms raw JSON records into structured datasets, performs data quality checks, loads the processed data into a SQLite database, and generates reporting-ready outputs for analysis.
 
 ## Data Source
 
-**Open Food Facts API**  
-Open Food Facts is an open product database containing product names, brands, categories, countries, ingredients, nutrition information, Nutri-Score, and other product attributes.
+**Open Food Facts API**
+Open Food Facts is an open product database containing product names, brands, categories, countries, ingredients, nutrition information, Nutri-Score, NOVA group, and other product attributes.
 
-Official API documentation:  
+API documentation:
 https://openfoodfacts.github.io/openfoodfacts-server/api/
 
-Data reuse information:  
+Data reuse information:
 https://wiki.openfoodfacts.org/Reusing_Open_Food_Facts_Data
-
-## Why This Project
-
-This project is designed to demonstrate practical skills required for a Data Engineering working student role:
-
-- Python programming
-- API-based data ingestion
-- ETL pipeline development
-- Batch ingestion
-- SQL database loading
-- Data quality checks
-- Git/GitHub project structure
-- Documentation
-- Reporting-ready outputs
-- Power BI / Excel analytics preparation
 
 ## Tech Stack
 
-- Python
-- Requests
-- Pandas
-- SQLite
-- SQL
-- Git/GitHub
-- Jupyter Notebook
-- Power BI / Excel
+* Python
+* Requests
+* Pandas
+* SQLite
+* SQL
+* Jupyter Notebook
+* Git/GitHub
+* Power BI / Excel
 
 ## Project Structure
 
@@ -73,7 +33,6 @@ open-product-data-etl-catalog-analytics/
 │
 ├── README.md
 ├── requirements.txt
-├── .gitignore
 ├── run_pipeline.py
 │
 ├── src/
@@ -97,8 +56,7 @@ open-product-data-etl-catalog-analytics/
 │   ├── data_source.md
 │   ├── pipeline_design.md
 │   ├── data_model.md
-│   ├── powerbi_dashboard_guide.md
-│   └── github_upload_steps.md
+│   └── powerbi_dashboard_guide.md
 │
 ├── notebooks/
 │   └── exploratory_analysis.ipynb
@@ -107,82 +65,95 @@ open-product-data-etl-catalog-analytics/
     └── test_transform.py
 ```
 
+## Pipeline Workflow
 
+### 1. Extract
 
-## Important: Use the Updated API File
-
-If your error URL still contains:
-
-```text
-search_simple=1&action=process&json=1
-```
-
-you are still running an old version of `src/openfoodfacts_api.py`.
-
-The updated project uses the API v2 endpoint with retry handling and fallback query parameters.
-
-## Important Real Data Note
-
-This project is designed to use **real Open Food Facts API data**.  
-Run the pipeline locally to generate real product records:
-
-```bash
-python run_pipeline.py --page-size 100 --search-terms chocolate
-```
-
-This creates real API-based output files in:
+Product data is collected from the Open Food Facts API using the API v2 search endpoint.
 
 ```text
-data/raw/
-data/processed/
-reports/
+https://world.openfoodfacts.org/api/v2/search
 ```
 
-The generated data can then be committed to GitHub as proof of the working ETL pipeline.
+### 2. Transform
 
-## How to Run
+Raw JSON product records are cleaned and converted into structured fields, including:
 
-### 1. Clone the repository
+* product code
+* product name
+* brand
+* main category
+* country
+* Nutri-Score
+* NOVA group
+* quantity
+* packaging
+* labels
+* ingredient text length
+
+### 3. Validate
+
+The pipeline performs data quality checks for:
+
+* missing product names
+* missing brands
+* missing categories
+* missing countries
+* duplicate product codes
+* missing or invalid Nutri-Score values
+* invalid NOVA group values
+
+### 4. Load
+
+The cleaned product dataset and data quality report are loaded into a SQLite database.
+
+### 5. Report
+
+Summary CSV files are generated for further analysis in Power BI, Excel, or other BI tools.
+
+## Installation
+
+Clone the repository:
 
 ```bash
 git clone https://github.com/Subashsuresh99/open-product-data-etl-catalog-analytics.git
 cd open-product-data-etl-catalog-analytics
 ```
 
-### 2. Create a virtual environment
+Create a virtual environment:
 
 ```bash
 python -m venv venv
 ```
 
-Activate it:
+Activate the environment:
 
 ```bash
 # Windows
 venv\Scripts\activate
 
-# macOS/Linux
+# macOS / Linux
 source venv/bin/activate
 ```
 
-### 3. Install dependencies
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Run the ETL pipeline
+## Run the Pipeline
 
-Fetch 100 real products:
+Fetch 100 product records:
 
 ```bash
 python run_pipeline.py --page-size 100 --search-terms chocolate
 ```
 
-Fetch 200 real products:
+Fetch records for another category:
 
 ```bash
-python run_pipeline.py --page-size 200 --search-terms coffee
+python run_pipeline.py --page-size 100 --search-terms coffee
 ```
 
 ## Output Files
@@ -199,95 +170,38 @@ reports/brand_summary.csv
 reports/country_summary.csv
 ```
 
-## Pipeline Steps
+## Reporting Outputs
 
-### 1. Extract
+The generated reports include:
 
-The pipeline sends a request to the Open Food Facts API v2 search endpoint and retrieves product catalog data in JSON format.
+* category-level product summary
+* brand-level product summary
+* country-level product summary
+* data quality report
 
-### 2. Transform
+These outputs can be used to build dashboards showing product distribution, brand coverage, country coverage, Nutri-Score completeness, and data quality gaps.
 
-Raw product records are cleaned and converted into structured data fields such as:
+## Example Analysis Questions
 
-- product code
-- product name
-- brand
-- main category
-- country
-- Nutri-Score
-- NOVA group
-- quantity
-- ingredient length
-- packaging
-- labels
-
-### 3. Validate
-
-The pipeline checks for common data quality issues:
-
-- missing product names
-- missing brands
-- missing categories
-- missing countries
-- duplicate product codes
-- missing nutrition grades
-- invalid NOVA group values
-
-### 4. Load
-
-Processed data is loaded into a SQLite database.
-
-### 5. Report
-
-Summary tables are generated for Power BI / Excel reporting.
-
-## Example Business Questions
-
-- Which product categories have the most records?
-- Which brands appear most frequently?
-- Which countries have the highest number of products?
-- What percentage of products have missing Nutri-Score values?
-- Which categories have better data completeness?
-- What data quality gaps exist in the product catalog?
-
-## Suggested Power BI Dashboard Pages
-
-1. Product catalog overview
-2. Brand and category analysis
-3. Country distribution
-4. Nutri-Score and NOVA group overview
-5. Data quality monitoring
-
-## Resume Entry
-
-**Open Product Data ETL Pipeline for Catalog Analytics**  
-Developed a Python-based ETL pipeline using real open product data from the Open Food Facts API. Collected product catalog records, cleaned and validated fields such as product name, brand, category, country, Nutri-Score, and NOVA group, loaded structured data into SQLite, and prepared reporting-ready outputs for Power BI analytics. Documented the workflow in GitHub with reusable scripts, data quality checks, SQL schema, and pipeline documentation.
+* Which product categories contain the most records?
+* Which brands appear most frequently in the collected dataset?
+* Which countries have the highest number of products?
+* How complete is the Nutri-Score information?
+* Which fields have the highest number of missing values?
+* What are the main data quality issues in the product catalog?
 
 ## Skills Demonstrated
 
-- Data engineering
-- API ingestion
-- ETL/ELT concepts
-- Batch data processing
-- Python scripting
-- SQL database loading
-- Data quality validation
-- Reporting and dashboard preparation
-- Technical documentation
-- GitHub project organization
+* API data ingestion
+* ETL pipeline development
+* Data cleaning and transformation
+* Data quality validation
+* SQL database loading
+* Batch data processing
+* Reporting output generation
+* Technical documentation
+* Reproducible project structure
 
+## Project Summary
 
-## Troubleshooting
-
-If pandas installation fails on Windows with a `pyproject.toml` or Visual Studio error, run:
-
-```bash
-python -m pip install --upgrade pip setuptools wheel
-pip install -r requirements.txt
-```
-
-See:
-
-```text
-docs/troubleshooting.md
-```
+This project shows how real product data can be collected from an open API, transformed into structured datasets, checked for quality issues, stored in a SQL database, and prepared for business intelligence reporting.
