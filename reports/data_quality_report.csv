@@ -1,0 +1,8 @@
+check_name,status,failed_count,total_count,failure_rate
+missing_product_name,PASS,0,20,0.0
+missing_brand,FAIL,1,20,0.05
+missing_main_category,PASS,0,20,0.0
+missing_country,PASS,0,20,0.0
+missing_or_invalid_nutriscore,FAIL,7,20,0.35
+invalid_nova_group,PASS,0,20,0.0
+duplicate_product_code,PASS,0,20,0.0

@@ -1,0 +1,12 @@
+category,product_count,unique_brands,products_with_nutriscore,average_ingredient_text_length,nutriscore_completeness_rate
+Instant noodles,6,4,4,418.8333333333333,0.67
+Cereals and their products,4,4,2,645.25,0.5
+Dry pastas,2,2,2,16.0,1.0
+Dehydrated soups,1,1,1,542.0,1.0
+Fats,1,1,0,0.0,0.0
+Gnocchi of durum wheat semolina,1,1,0,246.0,0.0
+Noodles,1,1,0,46.0,0.0
+Pastas,1,1,1,21.0,1.0
+Potato gnocchi,1,1,1,378.0,1.0
+Spaghetti,1,1,1,28.0,1.0
+fr:Coquillettes,1,1,1,79.0,1.0
